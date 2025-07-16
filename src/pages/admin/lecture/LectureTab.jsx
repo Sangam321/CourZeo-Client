@@ -6,11 +6,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useEditLectureMutation, useGetLectureByIdQuery, useRemoveLectureMutation } from "@/features/api/courseApi";
+import {
+  useEditLectureMutation,
+  useGetLectureByIdQuery,
+  useRemoveLectureMutation,
+} from "@/features/api/courseApi";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -26,6 +38,7 @@ const LectureTab = () => {
   const [mediaProgress, setMediaProgress] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [btnDisable, setBtnDisable] = useState(true);
+  const [showDialog, setShowDialog] = useState(false);
   const params = useParams();
   const { courseId, lectureId } = params;
 
@@ -36,9 +49,9 @@ const LectureTab = () => {
     if (lecture) {
       setLectureTitle(lecture.lectureTitle);
       setIsFree(lecture.isPreviewFree);
-      setUploadVideoInfo(lecture.videoInfo)
+      setUploadVideoInfo(lecture.videoInfo);
     }
-  }, [lecture])
+  }, [lecture]);
 
   const [edtiLecture, { data, isLoading, error, isSuccess }] =
     useEditLectureMutation();
@@ -58,7 +71,6 @@ const LectureTab = () => {
         });
 
         if (res.data.success) {
-          console.log(res);
           setUploadVideoInfo({
             videoUrl: res.data.data.url,
             publicId: res.data.data.public_id,
@@ -76,8 +88,6 @@ const LectureTab = () => {
   };
 
   const editLectureHandler = async () => {
-    console.log({ lectureTitle, uploadVideInfo, isFree, courseId, lectureId });
-
     await edtiLecture({
       lectureTitle,
       videoInfo: uploadVideInfo,
@@ -89,7 +99,8 @@ const LectureTab = () => {
 
   const removeLectureHandler = async () => {
     await removeLecture(lectureId);
-  }
+    setShowDialog(false);
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -104,7 +115,7 @@ const LectureTab = () => {
     if (removeSuccess) {
       toast.success(removeData.message);
     }
-  }, [removeSuccess])
+  }, [removeSuccess]);
 
   return (
     <Card>
@@ -116,14 +127,44 @@ const LectureTab = () => {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button disbaled={removeLoading} variant="destructive" onClick={removeLectureHandler}>
-            {
-              removeLoading ? <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </> : "Remove Lecture"
-            }
-          </Button>
+          <Dialog open={showDialog} onOpenChange={setShowDialog}>
+            <DialogTrigger asChild>
+              <Button disabled={removeLoading} variant="destructive">
+                {removeLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  "Remove Lecture"
+                )}
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure you want to delete this lecture?</DialogTitle>
+              </DialogHeader>
+              <DialogFooter className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowDialog(false)}>
+                  No
+                </Button>
+                <Button
+                  variant="destructive"
+                  disabled={removeLoading}
+                  onClick={removeLectureHandler}
+                >
+                  {removeLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </>
+                  ) : (
+                    "Yes, Delete"
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </CardHeader>
       <CardContent>
@@ -162,13 +203,14 @@ const LectureTab = () => {
 
         <div className="mt-4">
           <Button disabled={isLoading} onClick={editLectureHandler}>
-            {
-              isLoading ? <>
+            {isLoading ? (
+              <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
-              </> : "Update Lecture"
-            }
-
+              </>
+            ) : (
+              "Update Lecture"
+            )}
           </Button>
         </div>
       </CardContent>
