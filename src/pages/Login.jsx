@@ -118,7 +118,8 @@ const Login = () => {
     !!signupPasswordError;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-white to-[#e8efff] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-12 px-4">
+
       <div className="w-full max-w-md mx-auto -mt-1 md:-mt-1">
         {/* Header Section */}
         <div className="text-center mb-8">
