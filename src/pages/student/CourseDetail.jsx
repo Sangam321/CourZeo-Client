@@ -79,17 +79,13 @@ const CourseDetail = () => {
         <div className="w-full lg:w-1/3">
           <Card>
             <CardContent className="p-4 flex flex-col">
-              {/* Thumbnail Preview */}
-              <div className="w-full aspect-video mb-4 bg-gray-100 flex items-center justify-center overflow-hidden">
-                {course.courseThumbnail ? (
-                  <img
-                    src={course.courseThumbnail}
-                    alt="Course Thumbnail"
-                    className="object-cover w-full h-full rounded"
-                  />
-                ) : (
-                  <div className="text-gray-400">No Thumbnail Available</div>
-                )}
+              <div className="w-full aspect-video mb-4">
+                <ReactPlayer
+                  width="100%"
+                  height={"100%"}
+                  url={course.lectures[0].videoUrl}
+                  controls={true}
+                />
               </div>
 
               <h1>{course.lectures?.[0]?.lectureTitle || "Lecture title"}</h1>
