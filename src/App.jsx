@@ -22,6 +22,7 @@ import AboutUs from "./pages/student/About_us";
 import CourseDetail from "./pages/student/CourseDetail";
 import CourseProgress from "./pages/student/CourseProgress";
 import Courses from "./pages/student/Courses";
+import Faq from "./pages/student/Faq";
 import HeroSection from "./pages/student/HeroSection";
 import MyLearning from "./pages/student/MyLearning";
 import Profile from "./pages/student/Profile";
@@ -41,6 +42,7 @@ const appRouter = createBrowserRouter([
             <Courses />
             <Services />
             <AboutUs />
+            <Faq />
           </>
         ),
       },
