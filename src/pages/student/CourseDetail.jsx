@@ -1,5 +1,7 @@
 import BuyCourseButton from "@/components/BuyCourseButton";
 import { Button } from "@/components/ui/button";
+import ReactPlayer from 'react-player';
+
 import {
   Card,
   CardContent,
